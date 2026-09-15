@@ -12,5 +12,6 @@ namespace api.models
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public DateTime ExpireAt { get; set; }
+        public ICollection<Product> Products { get; set; } = [];
     }
 }
