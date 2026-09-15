@@ -9,6 +9,7 @@ namespace api.models
         public string? Description { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal UnitValue { get; set; }
+        public Stock? Stock { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }

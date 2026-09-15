@@ -4,7 +4,7 @@ namespace api.models
     {
         public int Id { get; set; }
         public int ProductId { get; set; }
-        public ICollection<Product> Products { get; set; } = [];
+        public required Product Product { get; set; }
         public int Amount { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
