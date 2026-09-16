@@ -1,8 +1,10 @@
 namespace api.DTOs.Product;
+
 public class ProductResponse
 {
     public int Id { get; set; }
     public required string Name { get; set; }
+    public decimal UnitValue { get; set; }
     public string? Description { get; set; }
 
     public int? StockAmount { get; set; } = 0;

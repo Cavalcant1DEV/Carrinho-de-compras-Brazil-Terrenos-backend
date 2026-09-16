@@ -29,7 +29,8 @@ public class ProductService
                 Id = p.Id,
                 Name = p.Name,
                 Description = p.Description,
-                StockAmount = p.Stock != null ? p.Stock.Amount : 0
+                StockAmount = p.Stock != null ? p.Stock.Amount : 0,
+                UnitValue = p.UnitValue
             })
             .OrderBy(p => p.Id)
             .Skip((page - 1) * pageSize)
