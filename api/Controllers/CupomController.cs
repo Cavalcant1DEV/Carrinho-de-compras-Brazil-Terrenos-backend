@@ -1,4 +1,5 @@
 using api.DTOs.Cupom;
+using api.DTOs.Error;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -14,7 +15,8 @@ namespace api.Controllers
         }
 
         [HttpGet]
-
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<CupomResponse>> GetAll(
             [FromQuery] string code
         )
@@ -26,13 +28,16 @@ namespace api.Controllers
                 var response = await _cs.GetCupomAsync(code);
 
                 if (response == null)
-                    return NotFound();
+                    return NotFound(new ErrorResponse
+                    {
+                        message = "Cupom não encontrado."
+                    });
 
                 return Ok(response);
             }
             catch (ArgumentException ex)
             {
-                return BadRequest(new
+                return BadRequest(new ErrorResponse
                 {
                     message = ex.Message
                 });

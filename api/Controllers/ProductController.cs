@@ -1,4 +1,5 @@
 using api.DTOs.Common;
+using api.DTOs.Error;
 using api.DTOs.Product;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +16,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
-
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<PagedResponse<ProductResponse>>> GetAll(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 5,
@@ -23,10 +24,18 @@ namespace api.Controllers
         )
         {
             if (page < 1)
-                return BadRequest("A página inicial deve ser maior que 0.");
+                return BadRequest(
+                    new ErrorResponse
+                    {
+                        message = "A página inicial deve ser maior que 0."
+                    });
 
             if (pageSize < 1 || pageSize > 100)
-                return BadRequest("O tamanho de listagem deve estar entre 1 e 100.");
+                return BadRequest(
+                    new ErrorResponse
+                    {
+                        message = "O tamanho de listagem deve estar entre 1 e 100."
+                    });
 
             var response = await _ps.GetPagedAsync(page, pageSize, name);
 

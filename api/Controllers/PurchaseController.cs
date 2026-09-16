@@ -1,4 +1,5 @@
 using api.DTOs.Common;
+using api.DTOs.Error;
 using api.DTOs.Purchase;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +16,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<PagedResponse<PurchaseResponse>>> GetAll(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 5,
@@ -23,10 +25,18 @@ namespace api.Controllers
         )
         {
             if (page < 1)
-                return BadRequest("A página inicial deve ser maior que 0.");
+                return BadRequest(
+                    new ErrorResponse
+                    {
+                        message = "A página inicial deve ser maior que 0."
+                    });
 
             if (pageSize < 1 || pageSize > 100)
-                return BadRequest("O tamanho de listagem deve estar entre 1 e 100.");
+                return BadRequest(
+                    new ErrorResponse
+                    {
+                        message = "O tamanho de listagem deve estar entre 1 e 100."
+                    });
 
             var response = await _ps.GetPagedAsync(page, pageSize, startDate, endDate);
 
@@ -34,6 +44,7 @@ namespace api.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<CreatePurchaseResponse>> Submit(
             [FromBody] CreatePurchaseRequest request
         )
@@ -49,20 +60,26 @@ namespace api.Controllers
             }
             catch (ArgumentException ex)
             {
-                return BadRequest(new
-                {
-                    message = ex.Message
-                });
+                return BadRequest(
+                    new ErrorResponse
+                    {
+                        message = ex.Message
+                    });
             }
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<DetailedPurchaseResponse>> GetById(int id)
         {
             var purchase = await _ps.GetById(id);
 
             if (purchase == null)
-                return NotFound();
+                return NotFound(
+                    new ErrorResponse
+                    {
+                        message = "Compra não encontrada."
+                    });
 
             return Ok(purchase);
         }
