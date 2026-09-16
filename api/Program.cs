@@ -3,7 +3,6 @@ using api.Data.Seeders;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -11,6 +10,9 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<CupomService>();
+builder.Services.AddScoped<PurchaseService>();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
