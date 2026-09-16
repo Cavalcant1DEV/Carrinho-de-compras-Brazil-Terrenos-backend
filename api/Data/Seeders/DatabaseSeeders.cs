@@ -112,7 +112,6 @@ public static class DatabaseSeeder
                 Type = DiscountType.Percentage,
                 Amount = 10m,
                 AmountOfUsages = 100,
-                ExpiredAt = DateTime.UtcNow.AddYears(1)
             },
             new()
             {
@@ -120,7 +119,6 @@ public static class DatabaseSeeder
                 Type = DiscountType.Percentage,
                 Amount = 15m,
                 AmountOfUsages = 100,
-                ExpiredAt = DateTime.UtcNow.AddYears(1)
             }
         };
 
