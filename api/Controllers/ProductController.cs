@@ -19,7 +19,7 @@ namespace api.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<PagedResponse<ProductResponse>>> GetAll(
             [FromQuery] int page = 1,
-            [FromQuery] int pageSize = 5,
+            [FromQuery] int pageSize = 6,
             [FromQuery] string? name = null
         )
         {
