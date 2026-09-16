@@ -21,7 +21,7 @@ public class CupomService
             .Select(c => new CupomResponse
             {
                 Id = c.Id,
-                Type = c.Type,
+                Type = c.Type.ToString(),
                 Value = c.Amount,
                 AmountOfUsages = c.AmountOfUsages,
                 ExpiredAt = c.ExpiredAt
