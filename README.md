@@ -210,7 +210,7 @@ O campo `discountId` é opcional.
 
 A interface web deste projeto está disponível em:
 
-[Brasil Terrenos Frontend](<URL_DO_REPOSITORIO_FRONTEND>)
+[Brasil Terrenos Frontend](https://github.com/Cavalcant1DEV/Carrinho-de-compras-Brazil-Terrenos-frontend.git)
 
 ## Licença
 
