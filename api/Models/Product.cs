@@ -10,7 +10,7 @@ namespace api.models
         [Column(TypeName = "decimal(18,2)")]
         public decimal UnitValue { get; set; }
         public Stock? Stock { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }

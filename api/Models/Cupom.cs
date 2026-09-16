@@ -11,8 +11,8 @@ namespace api.models
         [Column(TypeName = "decimal(18,2)")]
         public decimal Value { get; set; }
         public int AmountOfUsages { get; set; }
-        public DateTime createdAt { get; set; }
-        public DateTime updatedAt { get; set; }
-        public DateTime expiredAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime ExpiredAt { get; set; }
     }
 }
