@@ -15,6 +15,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(CupomResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<CupomResponse>> GetAll(
@@ -22,7 +23,7 @@ namespace api.Controllers
         )
         {
             if (code.Length <= 0)
-                return BadRequest("Informe um código de cupom válido.");
+                return BadRequest(new ErrorResponse { message = "Informe um código de cupom válido." });
             try
             {
                 var response = await _cs.GetCupomAsync(code);

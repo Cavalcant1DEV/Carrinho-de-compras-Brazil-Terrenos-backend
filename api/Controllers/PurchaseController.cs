@@ -16,6 +16,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(PagedResponse<PurchaseResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<PagedResponse<PurchaseResponse>>> GetAll(
             [FromQuery] int page = 1,
@@ -44,6 +45,7 @@ namespace api.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(CreatePurchaseResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<CreatePurchaseResponse>> Submit(
             [FromBody] CreatePurchaseRequest request
@@ -69,6 +71,7 @@ namespace api.Controllers
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(DetailedPurchaseResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<DetailedPurchaseResponse>> GetById(int id)
         {

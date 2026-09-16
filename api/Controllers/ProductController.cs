@@ -16,6 +16,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(PagedResponse<ProductResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<PagedResponse<ProductResponse>>> GetAll(
             [FromQuery] int page = 1,
