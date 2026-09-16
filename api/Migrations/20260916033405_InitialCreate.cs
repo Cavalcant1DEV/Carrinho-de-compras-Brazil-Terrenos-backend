@@ -21,9 +21,9 @@ namespace api.Migrations
                     type = table.Column<int>(type: "int", nullable: false),
                     Value = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     AmountOfUsages = table.Column<int>(type: "int", nullable: false),
-                    createdAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    updatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    expiredAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpiredAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -71,23 +71,21 @@ namespace api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Purchases",
+                name: "Purchase",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    Value = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    totalDiscount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Subtotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     DiscountId = table.Column<int>(type: "int", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Purchases", x => x.Id);
+                    table.PrimaryKey("PK_Purchase", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Purchases_Discount_DiscountId",
+                        name: "FK_Purchase_Discount_DiscountId",
                         column: x => x.DiscountId,
                         principalTable: "Discount",
                         principalColumn: "Id");
@@ -144,9 +142,9 @@ namespace api.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_StockMovement_Purchases_PurchaseId",
+                        name: "FK_StockMovement_Purchase_PurchaseId",
                         column: x => x.PurchaseId,
-                        principalTable: "Purchases",
+                        principalTable: "Purchase",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -157,8 +155,8 @@ namespace api.Migrations
                 column: "DiscountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Purchases_DiscountId",
-                table: "Purchases",
+                name: "IX_Purchase_DiscountId",
+                table: "Purchase",
                 column: "DiscountId");
 
             migrationBuilder.CreateIndex(
@@ -199,7 +197,7 @@ namespace api.Migrations
                 name: "Product");
 
             migrationBuilder.DropTable(
-                name: "Purchases");
+                name: "Purchase");
 
             migrationBuilder.DropTable(
                 name: "Discount");

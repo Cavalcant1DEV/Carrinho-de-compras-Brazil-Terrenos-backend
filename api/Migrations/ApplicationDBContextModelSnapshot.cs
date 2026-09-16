@@ -37,20 +37,20 @@ namespace api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiredAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<decimal>("Value")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("createdAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("expiredAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("type")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("updatedAt")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -133,23 +133,17 @@ namespace api.Migrations
                     b.Property<int?>("DiscountId")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Subtotal")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Value")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("totalDiscount")
-                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DiscountId");
 
-                    b.ToTable("Purchases");
+                    b.ToTable("Purchase");
                 });
 
             modelBuilder.Entity("api.models.Stock", b =>
