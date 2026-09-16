@@ -50,24 +50,55 @@ public class PurchaseService
     public async Task<CreatePurchaseResponse> CreatePurchase(CreatePurchaseRequest request)
     {
         await using var transaction =
-        await _context.Database.BeginTransactionAsync();
+    await _context.Database.BeginTransactionAsync();
 
         try
         {
+            if (request.Products.Count == 0)
+                throw new ArgumentException(
+                    "A compra precisa possuir pelo menos um produto."
+                );
+
             var productIds = request.Products
                 .Select(p => p.Id)
                 .ToList();
 
             var products = await _context.Product
-            .Where(p => productIds.Contains(p.Id))
-            .ToListAsync();
+                .Include(p => p.Stock)
+                .Where(p => productIds.Contains(p.Id))
+                .ToListAsync();
 
-            var subtotal = request.Products.Sum(item =>
+            decimal subtotal = 0;
+
+            foreach (var item in request.Products)
             {
-                var product = products.First(p => p.Id == item.Id);
+                var product = products
+                    .FirstOrDefault(p => p.Id == item.Id);
 
-                return product.UnitValue * item.Amount;
-            });
+                if (product == null)
+                {
+                    throw new ArgumentException(
+                        $"Produto {item.Id} não encontrado."
+                    );
+                }
+
+                if (item.Amount <= 0)
+                {
+                    throw new ArgumentException(
+                        $"Quantidade inválida para {product.Name}."
+                    );
+                }
+
+                if (product.Stock == null ||
+                    product.Stock.Amount < item.Amount)
+                {
+                    throw new ArgumentException(
+                        $"Estoque insuficiente para {product.Name}."
+                    );
+                }
+
+                subtotal += product.UnitValue * item.Amount;
+            }
 
             var purchase = new Purchase
             {
@@ -77,28 +108,24 @@ public class PurchaseService
 
             _context.Purchase.Add(purchase);
 
+            var cupom = await _context.Cupom
+                .FirstOrDefaultAsync(c => c.Id == request.CupomId) ?? throw new ArgumentException("Cupom não encontrado.");
+            if (cupom.AmountOfUsages <= 0)
+                throw new ArgumentException("Cupom sem usos disponíveis.");
+
+            cupom.AmountOfUsages--;
+
             foreach (var item in request.Products)
             {
-                var product = await _context.Product.Include(p => p.Stock).FirstOrDefaultAsync(p => p.Id == item.Id);
+                var product = products
+                    .First(p => p.Id == item.Id);
 
-                if (product == null)
-                    throw new ArgumentException(
-                        $"Produto {item.Id} não encontrado em estoque."
-                    );
-
-                if (product.Stock == null || product.Stock.Amount < item.Amount)
-                {
-                    throw new ArgumentException(
-                        $"Estoque insuficiente para {product.Name}."
-                    );
-                }
-
-                product.Stock.Amount -= item.Amount;
+                product.Stock!.Amount -= item.Amount;
 
                 var movement = new StockMovement
                 {
                     Amount = item.Amount,
-                    ProductId = item.Id,
+                    ProductId = product.Id,
                     Type = StockMovementType.outbound,
                     Purchase = purchase
                 };
@@ -114,7 +141,6 @@ public class PurchaseService
             {
                 Id = purchase.Id
             };
-
         }
         catch
         {
