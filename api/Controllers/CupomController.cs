@@ -1,5 +1,4 @@
-using api.DTOs.Common;
-using api.DTOs.Product;
+using api.DTOs.Cupom;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -16,7 +15,7 @@ namespace api.Controllers
 
         [HttpGet]
 
-        public async Task<ActionResult<PagedResponse<ProductResponse>>> GetAll(
+        public async Task<ActionResult<CupomResponse>> GetAll(
             [FromQuery] string code
         )
         {
