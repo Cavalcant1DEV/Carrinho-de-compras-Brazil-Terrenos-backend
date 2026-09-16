@@ -13,7 +13,7 @@ namespace api.models
         public Product Product { get; set; } = null!;
         public StockMovementType Type { get; set; }
         public int Amount { get; set; }
-        public Discount? Discount { get; set; }
+        public Cupom? Cupom { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

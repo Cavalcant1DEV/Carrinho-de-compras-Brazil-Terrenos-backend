@@ -7,9 +7,9 @@ namespace api.models
     {
         public int Id { get; set; }
         public string Code { get; set; } = string.Empty;
-        public DiscountType type { get; set; }
+        public DiscountType Type { get; set; }
         [Column(TypeName = "decimal(18,2)")]
-        public decimal Value { get; set; }
+        public decimal Amount { get; set; }
         public int AmountOfUsages { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

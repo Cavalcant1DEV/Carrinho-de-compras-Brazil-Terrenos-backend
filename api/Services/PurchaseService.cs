@@ -25,8 +25,8 @@ public class PurchaseService
             .Select(p => new PurchaseResponse
             {
                 Id = p.Id,
-                DiscountValue = p.Discount != null ? p.Discount.Amount : 0,
-                DiscountType = p.Discount != null ? p.Discount.Type : null,
+                DiscountValue = p.Cupom != null ? p.Cupom.Amount : 0,
+                DiscountType = p.Cupom != null ? p.Cupom.Type : null,
                 Subtotal = p.Subtotal,
                 ProductsCount = p.StockMovements.Sum(sm => sm.Amount)
             })
@@ -71,7 +71,7 @@ public class PurchaseService
 
             var purchase = new Purchase
             {
-                DiscountId = request.DiscountId,
+                CupomId = request.CupomId,
                 Subtotal = subtotal
             };
 

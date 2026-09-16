@@ -4,6 +4,6 @@ namespace api.DTOs.Purchase;
 
 public class CreatePurchaseRequest
 {
-    public int DiscountId { get; set; }
+    public int CupomId { get; set; }
     public ICollection<ProductAmountRequest> Products { get; set; } = [];
 }
