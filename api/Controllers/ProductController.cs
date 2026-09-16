@@ -1,3 +1,5 @@
+using api.DTOs.Common;
+using api.DTOs.Product;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -14,7 +16,7 @@ namespace api.Controllers
 
         [HttpGet]
 
-        public async Task<IActionResult> GetAll(
+        public async Task<ActionResult<PagedResponse<ProductResponse>>> GetAll(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 5,
             [FromQuery] string? name = null

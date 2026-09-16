@@ -1,3 +1,4 @@
+using api.DTOs.Common;
 using api.DTOs.Purchase;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +15,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll(
+        public async Task<ActionResult<PagedResponse<PurchaseResponse>>> GetAll(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 5,
             [FromQuery] DateTime? startDate = null,
@@ -33,7 +34,7 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Submit(
+        public async Task<ActionResult<CreatePurchaseResponse>> Submit(
             [FromBody] CreatePurchaseRequest request
         )
         {
@@ -56,7 +57,7 @@ namespace api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<ActionResult<DetailedPurchaseResponse>> GetById(int id)
         {
             var purchase = await _ps.GetById(id);
 
