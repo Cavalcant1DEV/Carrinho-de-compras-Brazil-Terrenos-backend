@@ -107,13 +107,15 @@ public class PurchaseService
             };
 
             _context.Purchase.Add(purchase);
+            if (request.CupomId != null)
+            {
+                var cupom = await _context.Cupom
+                    .FirstOrDefaultAsync(c => c.Id == request.CupomId) ?? throw new ArgumentException("Cupom não encontrado.");
+                if (cupom.AmountOfUsages <= 0)
+                    throw new ArgumentException("Cupom sem usos disponíveis.");
 
-            var cupom = await _context.Cupom
-                .FirstOrDefaultAsync(c => c.Id == request.CupomId) ?? throw new ArgumentException("Cupom não encontrado.");
-            if (cupom.AmountOfUsages <= 0)
-                throw new ArgumentException("Cupom sem usos disponíveis.");
-
-            cupom.AmountOfUsages--;
+                cupom.AmountOfUsages--;
+            }
 
             foreach (var item in request.Products)
             {
