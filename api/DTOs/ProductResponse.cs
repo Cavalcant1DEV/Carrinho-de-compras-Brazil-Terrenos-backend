@@ -1,4 +1,4 @@
-using api.models;
+using api.DTOs;
 
 public class ProductResponse
 {

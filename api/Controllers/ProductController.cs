@@ -1,6 +1,4 @@
-using api.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
@@ -8,10 +6,10 @@ namespace api.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
-        public ProductController(ApplicationDBContext context)
+        private readonly ProductService _ps;
+        public ProductController(ProductService ps)
         {
-            _context = context;
+            _ps = ps;
         }
 
         [HttpGet]
@@ -23,46 +21,14 @@ namespace api.Controllers
         )
         {
             if (page < 1)
-                return BadRequest("Page must be greater than 0.");
+                return BadRequest("A página inicial deve ser maior que 0.");
 
             if (pageSize < 1 || pageSize > 100)
-                return BadRequest("PageSize must be between 1 and 100.");
+                return BadRequest("O tamanho de listagem deve estar entre 1 e 100.");
 
-            var query = _context.Product.AsNoTracking().AsQueryable();
+            var response = await _ps.GetPagedAsync(page, pageSize, name);
 
-            if (!string.IsNullOrEmpty(name))
-            {
-                query = query.Where(p => EF.Functions.Like(p.Name, $"%{name}%"));
-            }
-
-            var totalItems = await query.CountAsync();
-
-            var products = await query
-                .Select(p => new ProductResponse
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Description = p.Description,
-                    StockAmount = p.Stock != null ? p.Stock.Amount : 0
-                })
-                .OrderBy(p => p.Id)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            return Ok(new
-            {
-                data = products,
-                pagination = new
-                {
-                    page,
-                    pageSize,
-                    totalItems,
-                    totalPages = (int)Math.Ceiling(
-                        totalItems / (double)pageSize
-                    )
-                }
-            });
+            return Ok(response);
         }
     }
 }
