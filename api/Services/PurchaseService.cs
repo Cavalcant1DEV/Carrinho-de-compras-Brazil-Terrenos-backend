@@ -1,5 +1,9 @@
 using api.Data;
 using api.DTOs.Common;
+using api.DTOs.Purchase;
+using api.enums;
+using api.models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 public class PurchaseService
@@ -42,6 +46,83 @@ public class PurchaseService
         )
         };
     }
+
+    public async Task<CreatePurchaseResponse> CreatePurchase(CreatePurchaseRequest request)
+    {
+        await using var transaction =
+        await _context.Database.BeginTransactionAsync();
+
+        try
+        {
+            var productIds = request.Products
+                .Select(p => p.Id)
+                .ToList();
+
+            var products = await _context.Product
+            .Where(p => productIds.Contains(p.Id))
+            .ToListAsync();
+
+            var subtotal = request.Products.Sum(item =>
+            {
+                var product = products.First(p => p.Id == item.Id);
+
+                return product.UnitValue * item.Amount;
+            });
+
+            var purchase = new Purchase
+            {
+                DiscountId = request.DiscountId,
+                Subtotal = subtotal
+            };
+
+            _context.Purchase.Add(purchase);
+
+            foreach (var item in request.Products)
+            {
+                var product = await _context.Product.Include(p => p.Stock).FirstOrDefaultAsync(p => p.Id == item.Id);
+
+                if (product == null)
+                    throw new ArgumentException(
+                        $"Produto {item.Id} não encontrado em estoque."
+                    );
+
+                if (product.Stock == null || product.Stock.Amount < item.Amount)
+                {
+                    throw new ArgumentException(
+                        $"Estoque insuficiente para {product.Name}."
+                    );
+                }
+
+                product.Stock.Amount -= item.Amount;
+
+                var movement = new StockMovement
+                {
+                    Amount = item.Amount,
+                    ProductId = item.Id,
+                    Type = StockMovementType.outbound,
+                    Purchase = purchase
+                };
+
+                _context.StockMovement.Add(movement);
+            }
+
+            await _context.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+
+            return new CreatePurchaseResponse
+            {
+                Id = purchase.Id
+            };
+
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
+
     public async Task<DetailedPurchaseResponse?> GetById(int id)
     {
         return await _context.Purchase

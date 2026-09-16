@@ -1,3 +1,4 @@
+using api.DTOs.Purchase;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -29,6 +30,40 @@ namespace api.Controllers
             var response = await _ps.GetPagedAsync(page, pageSize, startDate, endDate);
 
             return Ok(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Submit(
+            [FromBody] CreatePurchaseRequest request
+        )
+        {
+            try
+            {
+                var purchase = await _ps.CreatePurchase(request);
+                return CreatedAtAction(
+                    nameof(GetById),
+                    new { id = purchase.Id },
+                    purchase
+                );
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new
+                {
+                    message = ex.Message
+                });
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var purchase = await _ps.GetById(id);
+
+            if (purchase == null)
+                return NotFound();
+
+            return Ok(purchase);
         }
     }
 }

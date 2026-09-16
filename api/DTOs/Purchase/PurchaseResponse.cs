@@ -1,6 +1,5 @@
-using api.DTOs;
+namespace api.DTOs.Purchase;
 using api.enums;
-
 public class PurchaseResponse
 {
     public int Id { get; set; }
