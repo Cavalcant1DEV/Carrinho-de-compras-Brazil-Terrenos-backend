@@ -1,5 +1,4 @@
-using api.DTOs;
-
+namespace api.DTOs.Product;
 public class ProductResponse
 {
     public int Id { get; set; }
