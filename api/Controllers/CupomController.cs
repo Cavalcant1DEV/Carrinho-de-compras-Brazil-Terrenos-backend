@@ -21,13 +21,22 @@ namespace api.Controllers
         {
             if (code.Length <= 0)
                 return BadRequest("Informe um código de cupom válido.");
+            try
+            {
+                var response = await _cs.GetCupomAsync(code);
 
-            var response = await _cs.GetCupomAsync(code);
+                if (response == null)
+                    return NotFound();
 
-            if (response == null)
-                return NotFound();
-
-            return Ok(response);
+                return Ok(response);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new
+                {
+                    message = ex.Message
+                });
+            }
         }
     }
 }
