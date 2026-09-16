@@ -7,7 +7,7 @@ namespace api.models
     {
         public int Id { get; set; }
         public int UserId { get; set; } = 1;
-        public int PurchaseId { get; set; }
+        public int? PurchaseId { get; set; }
         public Purchase? Purchase { get; set; }
         public int ProductId { get; set; }
         public Product Product { get; set; } = null!;
