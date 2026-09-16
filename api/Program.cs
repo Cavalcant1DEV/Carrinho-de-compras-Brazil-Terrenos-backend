@@ -32,6 +32,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("Frontend");
 
 using (var scope = app.Services.CreateScope())
 {
