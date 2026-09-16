@@ -1,4 +1,5 @@
 using api.Data;
+using api.Data.Seeders;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +27,7 @@ using (var scope = app.Services.CreateScope())
         .GetRequiredService<ApplicationDBContext>();
 
     await dbContext.Database.MigrateAsync();
+    await DatabaseSeeder.SeedAsync(dbContext);
 }
 
 app.MapControllers();
