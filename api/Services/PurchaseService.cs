@@ -42,4 +42,22 @@ public class PurchaseService
         )
         };
     }
+    public async Task<DetailedPurchaseResponse?> GetById(int id)
+    {
+        return await _context.Purchase
+        .AsNoTracking()
+        .Where(p => p.Id == id)
+        .Select(p => new DetailedPurchaseResponse
+        {
+            Id = p.Id,
+            Products = p.StockMovements.Select(sm => new PurchaseProductsResponse
+            {
+                Id = sm.ProductId,
+                Name = sm.Product.Name,
+                Amount = sm.Amount,
+                Description = sm.Product.Description
+            }).ToList()
+        }).FirstOrDefaultAsync();
+
+    }
 }
