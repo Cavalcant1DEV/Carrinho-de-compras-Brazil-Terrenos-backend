@@ -30,6 +30,9 @@ namespace api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("AmountOfUsages")
                         .HasColumnType("int");
 
@@ -43,37 +46,6 @@ namespace api.Migrations
                     b.Property<DateTime>("ExpiredAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("Value")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("type")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Cupom");
-                });
-
-            modelBuilder.Entity("api.models.Discount", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ExpireAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
@@ -82,7 +54,7 @@ namespace api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Discount");
+                    b.ToTable("Cupom");
                 });
 
             modelBuilder.Entity("api.models.Product", b =>
@@ -99,9 +71,6 @@ namespace api.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("DiscountId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -113,8 +82,6 @@ namespace api.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DiscountId");
 
                     b.ToTable("Product");
                 });
@@ -130,7 +97,7 @@ namespace api.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DiscountId")
+                    b.Property<int?>("CupomId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Subtotal")
@@ -141,7 +108,7 @@ namespace api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DiscountId");
+                    b.HasIndex("CupomId");
 
                     b.ToTable("Purchase");
                 });
@@ -188,7 +155,7 @@ namespace api.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DiscountId")
+                    b.Property<int?>("CupomId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
@@ -205,7 +172,7 @@ namespace api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DiscountId");
+                    b.HasIndex("CupomId");
 
                     b.HasIndex("ProductId");
 
@@ -214,20 +181,13 @@ namespace api.Migrations
                     b.ToTable("StockMovement");
                 });
 
-            modelBuilder.Entity("api.models.Product", b =>
-                {
-                    b.HasOne("api.models.Discount", null)
-                        .WithMany("Products")
-                        .HasForeignKey("DiscountId");
-                });
-
             modelBuilder.Entity("api.models.Purchase", b =>
                 {
-                    b.HasOne("api.models.Discount", "Discount")
+                    b.HasOne("api.models.Cupom", "Cupom")
                         .WithMany()
-                        .HasForeignKey("DiscountId");
+                        .HasForeignKey("CupomId");
 
-                    b.Navigation("Discount");
+                    b.Navigation("Cupom");
                 });
 
             modelBuilder.Entity("api.models.Stock", b =>
@@ -243,9 +203,9 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.models.StockMovement", b =>
                 {
-                    b.HasOne("api.models.Discount", "Discount")
+                    b.HasOne("api.models.Cupom", "Cupom")
                         .WithMany()
-                        .HasForeignKey("DiscountId");
+                        .HasForeignKey("CupomId");
 
                     b.HasOne("api.models.Product", "Product")
                         .WithMany()
@@ -259,16 +219,11 @@ namespace api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Discount");
+                    b.Navigation("Cupom");
 
                     b.Navigation("Product");
 
                     b.Navigation("Purchase");
-                });
-
-            modelBuilder.Entity("api.models.Discount", b =>
-                {
-                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("api.models.Product", b =>
